@@ -35,7 +35,7 @@ def predict_duration(yosh, jins, maqsad):
     global model, le_gender, le_purpose
 
     if model is None:
-        raise ValueError("Model is not trained. Please call train_model first.")
+        raise ValueError("Model is not trained yet.")
 
     jins_encoded = le_gender.transform([jins])[0]
     maqsad_encoded = le_purpose.transform([maqsad])[0]

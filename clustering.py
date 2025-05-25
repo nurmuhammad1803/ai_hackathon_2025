@@ -39,13 +39,13 @@ def run_clustering(customers_path, visits_path, n_clusters=3):
         credit = segment["Credit_Class"].mode()[0]
 
         if visits >= 8:
-            label = "💎 VIP Mijozlar"
+            label = "💎 VIP clients"
         elif credit in ["A", "B"]:
-            label = "📈 Sodiq va Yaxshi Reytingli"
+            label = "📈 Potential Buyers"
         elif credit in ["D", "E"]:
-            label = "⚠️ Potensial Riskli Mijozlar"
+            label = "Not likely to purchase"
         else:
-            label = "👤 Yangi yoki Aralash Guruh"
+            label = "👤 New clients"
         labels.append(label)
 
     df["Cluster_Label"] = df["Cluster"].apply(lambda x: labels[x])

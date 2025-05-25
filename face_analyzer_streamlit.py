@@ -5,11 +5,9 @@ import numpy as np
 from deepface import DeepFace
 from datetime import datetime
 
-# Config
 CASCADE_PATH = cv2.data.haarcascades + "haarcascade_frontalface_default.xml"
 ANALYSIS_INTERVAL = 2.0
 
-# Initialize face detector
 face_cascade = cv2.CascadeClassifier(CASCADE_PATH)
 
 st.set_page_config(layout="wide")
@@ -42,7 +40,6 @@ if run_camera:
         frame = cv2.flip(frame, 1)
         display_frame = frame.copy()
 
-        # Perform analysis every few seconds
         current_time = time.time()
         if current_time - last_analysis > ANALYSIS_INTERVAL:
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
@@ -66,14 +63,12 @@ if run_camera:
                     st.error(f"Xatolik: {e}")
             last_analysis = current_time
 
-        # Draw overlay text
         y0 = 40
         line_height = 30
         cv2.putText(display_frame, f"Jins: {latest_result['gender']} ({latest_result['confidence']})", (30, y0), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 255, 0), 2)
         cv2.putText(display_frame, f"Yosh: {latest_result['age']}", (30, y0 + line_height), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 255, 0), 2)
         cv2.putText(display_frame, f"Vaqt: {latest_result['timestamp']}", (30, y0 + line_height*2), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (200, 200, 0), 1)
 
-        # Display in app
         frame_placeholder.image(cv2.cvtColor(display_frame, cv2.COLOR_BGR2RGB), channels="RGB", use_container_width=True)
 
         if not run_camera:
