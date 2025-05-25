@@ -60,7 +60,6 @@ def extract_passport_data(image_path):
 
     return data
 
-# For testing
 if __name__ == "__main__":
     result = extract_passport_data("passport.jpg")
     print(result)

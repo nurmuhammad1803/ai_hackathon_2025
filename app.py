@@ -150,7 +150,7 @@ elif section == "🛰️ Yuqoridan Kuzatuv":
     zone_log = st.empty()
 
     if run:
-        cap = cv2.VideoCapture(0)  # Replace with your RTSP stream if needed
+        cap = cv2.VideoCapture(0)  # RTSP ------------------- 
         W, H = 1280, 720
         cap.set(cv2.CAP_PROP_FRAME_WIDTH, W)
         cap.set(cv2.CAP_PROP_FRAME_HEIGHT, H)
@@ -244,14 +244,12 @@ elif section == "🆔 Pasport Ro'yxatdan O'tkazish":
     uploaded_file = st.file_uploader("📷 Pasport fotosuratini yuklang", type=["jpg", "jpeg", "png"])
     
     if uploaded_file:
-        # Save uploaded image temporarily
         image_path = "temp_passport.jpg"
         with open(image_path, "wb") as f:
             f.write(uploaded_file.getbuffer())
 
         st.image(image_path, caption="Yuklangan pasport rasmi", use_column_width=True)
 
-        # Extract data from passport
         st.info("🔍 Ma'lumotlar olinmoqda...")
         extracted = passport_ocr.extract_passport_data(image_path)
 
