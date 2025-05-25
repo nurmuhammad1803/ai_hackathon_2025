@@ -239,17 +239,38 @@ elif section == "🛰️ Yuqoridan Kuzatuv":
         cap.release()
 
 elif section == "🆔 Pasport Ro'yxatdan O'tkazish":
-    st.title("🆔 Pasport orqali ro'yxat")
-    file = st.file_uploader('Rasm yuklang', type=['jpg','png','jpeg'])
-    if file:
-        path='temp.jpg'
-        with open(path,'wb') as f: f.write(file.getbuffer())
-        data=passport_ocr.extract_passport_data(path)
-        st.json(data)
-        if st.button('💾 Saqlash'):
-            if st.session_state.get('save_customer') is None:
-                pass
-            if save_customer({
-                'Pasport_raqami':data['Pasport_raqami'],'Ism':data['Ism'],'Jins':data['Jins'],'Yosh':data['Yosh'],'Telefon':'','Credit_Class':'C'
-            }): st.success('Saqlandi')
-            else: st.warning('Mavjud')
+    st.title("🆔 Pasport orqali ro'yxatdan o'tkazish")
+
+    uploaded_file = st.file_uploader("📷 Pasport fotosuratini yuklang", type=["jpg", "jpeg", "png"])
+    
+    if uploaded_file:
+        # Save uploaded image temporarily
+        image_path = "temp_passport.jpg"
+        with open(image_path, "wb") as f:
+            f.write(uploaded_file.getbuffer())
+
+        st.image(image_path, caption="Yuklangan pasport rasmi", use_column_width=True)
+
+        # Extract data from passport
+        st.info("🔍 Ma'lumotlar olinmoqda...")
+        extracted = passport_ocr.extract_passport_data(image_path)
+
+        st.subheader("🧾 Aniqlangan Ma'lumotlar")
+        st.json(extracted)
+
+        if st.button("💾 Mijozni saqlash"):
+            if extracted["Ism"] == "Noma'lum" or extracted["Familiya"] == "Noma'lum":
+                st.error("❌ Ism yoki familiya aniqlanmadi. Iltimos, aniq rasm yuklang.")
+            else:
+                new_row = {
+                    "Pasport_raqami": f"TEMP-{datetime.now().strftime('%Y%m%d%H%M%S')}",
+                    "Ism": extracted["Ism"],
+                    "Jins": extracted["Jins"],
+                    "Yosh": extracted["Yosh"],
+                    "Telefon": "",
+                    "Credit_Class": "C"
+                }
+                df = pd.read_csv(CUSTOMERS_PATH)
+                df = pd.concat([df, pd.DataFrame([new_row])], ignore_index=True)
+                df.to_csv(CUSTOMERS_PATH, index=False)
+                st.success("✅ Mijoz muvaffaqiyatli qo'shildi!")
